@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html 
+	lang="ko"
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+	<!-- head config 자리 -->
+	<th:block th:replace="fragments/config :: configFragment"></th:block> <!-- 경로 :: 조각의 이름 -->
+<body>
+	<div id="wrap">
+		<!-- header -->
+		<header th:replace="fragments/header :: headerFragment"></header>
+		
+		<!-- contents 영역 (어떨 땐 login이거나, 어떨 땐 회원가입이거나) -->
+		<section layout:fragment="content"></section>
+		
+		<!-- script -> content 조각 안에 있음 -->
+		<th:block layout:fragment="script"></th:block>
+		
+		<!-- footer 자리 -->
+		<footer th:replace="fragments/footer :: footerFragment"></footer>
+	</div>
+</body>
+</html>
