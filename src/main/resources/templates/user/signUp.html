@@ -1,13 +1,53 @@
 <!DOCTYPE html>
 <html 
-	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout/defaultLayout}">
-	
-<section layout:fragment="content" class="contents">
-	<div class="sign-up-box">
-		<h1>회원가입</h1>
+
+<section layout:fragment="content"
+	class="contents d-flex justify-content-center">
+	<div class="m-5">
+		<h2 class="mb-4">회원가입</h2>
+		<form method="post" action="">
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<th scope="row">*아이디(4자이상)</th>
+						<td class="d-flex"><input type="text" name="id"
+							class="form-control" placeholder="아이디를 입력하세요.">
+							<button class="form-control btn btn-success col-3">중복확인</button>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">*비밀번호</th>
+						<td><input type="password" name="password"
+							class="form-control" placeholder="비밀번호를 입력하세요."></td>
+					</tr>
+					<tr>
+						<th scope="row">비밀번호 확인</th>
+						<td><input type="password" name="passwordCheck"
+							class="form-control" placeholder="비밀번호를 입력하세요."></td>
+					</tr>
+					<tr>
+						<th scope="row">*이름</th>
+						<td><input type="text" name="name" class="form-control"
+							placeholder="이름을 입력하세요."></td>
+					</tr>
+					<tr>
+						<th scope="row">*이메일</th>
+						<td><input type="text" name="email" class="form-control"
+							placeholder="이메일 주소를 입력하세요."></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="d-flex justify-content-end">
+				<input type="submit" value="회원가입" class="btn btn-primary col-3">
+			</div>
+		</form>
 	</div>
+
+
+
 </section>
 <th:block layout:fragment="script">
 	<script>
