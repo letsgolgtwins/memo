@@ -7,12 +7,12 @@
 <section layout:fragment="content" class="d-flex justify-content-center">
 	<div class="frame container m-5">
 		<h2>로그인</h2>
-		<form method="post" action="">
+		<form method="post" action="/user/sign-in">
 			<div class="d-flex justify-content-center">
-				<input type="text" name="id" class="form-control mt-4" placeholder="아이디를 입력하세요.">
+				<input type="text" id="loginId" name="loginId" class="form-control mt-4" placeholder="아이디를 입력하세요.">
 			</div>
 			<div class="d-flex justify-content-center">
-				<input type="password" name="password" class="form-control mt-2" placeholder="암호를 입력하세요.">
+				<input type="password" id="password" name="password" class="form-control mt-2" placeholder="암호를 입력하세요.">
 			</div>
 			<div class="d-flex justify-content-center">
 				<input type="submit" value="로그인" class="signInBtn btn btn-warning mt-2">
@@ -26,6 +26,45 @@
 
 <th:block layout:fragment="script">
 	<script>
-		
+		$(document).ready(function() { // ready 함수 시작
+			// 로그인 form 시작.
+			$("form").on('submit', function(e) {
+				// alert("중간 점검");
+				e.preventDefault(); // form 기능 중단 = alert만 뜨고 안넘어감.
+			
+				// validation
+				let loginId = $("#loginId").val().trim();
+				let password = $("#password").val();
+				// 유효성 검사
+				if (!loginId) {
+					alert("아이디를 입력하세요.");
+					return false; // submit 일 땐 그냥 return 이 아니라 return false; 로 해주어야 한다.
+				}
+				if (!password) {
+					alert("비밀번호를 입력하세요.");
+					return false;
+				}
+				
+				// form의 action 주소인 url 
+				let url = $(this).attr('action');
+				console.log(url);
+				
+				// 파라미터인 loginId 와 password를 serialize 해서 QueryString 만들어주기
+				let params = $(this).serialize(); // 이때, id가 아니라 name 속성 반드시 있어야 함.
+				console.log(params);
+				
+				// AJAX
+				$.post(url, params) // request
+				.done(function(data) { // 아래의 done함수가 response (=callback 함수)
+					if (data.result == "성공") {
+						// 글 목록화면으로 이동
+						alert("로그인 완료. 글 목록 화면으로 이동합니다.");
+						location.href = "/post/post-list-view"
+					} else {
+						alert(data.error_message);
+					}
+ 				}); // AJAX 끝.
+			}); // 로그인 form  끝.
+		}); // ready 함수 끝
 	</script>
 </th:block>

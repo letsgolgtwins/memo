@@ -13,6 +13,9 @@ import com.memo.common.EncryptUtils;
 import com.memo.user.BO.UserBO;
 import com.memo.user.Entity.UserEntity;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @RequestMapping("/user")
 @RestController
 public class UserRestController {
@@ -25,7 +28,7 @@ public class UserRestController {
 	 * @param loginId
 	 * @return
 	 */
-	// db에서 조회
+	// db에서 loginId가 중복인지 조회
 	@RequestMapping("/is-duplicated-id") // 이거 getmapping이나 마찬가지 아닌가? > duplicateCheckBtn 클릭 이벤트의 ajax의 type이 get으로 했으니까?
 	public Map<String, Object> isDuplicatedId(
 			@RequestParam("loginId") String loginId) {
@@ -45,7 +48,7 @@ public class UserRestController {
 	}
 	
 	/**
-	 * 
+	 * 회원가입 API
 	 * @param loginId
 	 * @param password
 	 * @param name
@@ -76,5 +79,44 @@ public class UserRestController {
 			result.put("error_message", "회원가입에 실패하였습니다.");
 		}
 		return result;
+	}
+	
+	/**
+	 * 로그인 API
+	 * @param loginId
+	 * @param password
+	 * @param request
+	 * @return
+	 */
+	// 로그인 - db에서 select
+	@PostMapping("/sign-in")
+	public Map<String, Object> signIn(
+			// 이때 파라미터들은 signIn.html의 name 속성들
+			@RequestParam("loginId") String loginId,
+			@RequestParam("password") String password,
+			HttpServletRequest request) { 
+		
+		// password hashing (그냥 password 넣어봤자 무의미)
+		String hashedPassword = EncryptUtils.md5(password);
+		
+		// db에서 select 조회(UserEntity로 받아옴) - parameter는 loginId, hashedPassword
+		UserEntity user = userBO.getUserEntityByLoginIdPassword(loginId, hashedPassword);
+		
+		// 로그인 유지 처리 및 응답 JSON
+		Map<String, Object> map = new HashMap<>();
+		if (user != null) { // 로그인에 성공하였을 때
+			// 세션에 사용자 정보를 담는다. (사용자 각각 마다)
+			HttpSession session = request.getSession();
+			session.setAttribute("userId", user.getId());
+			session.setAttribute("userLoginId", user.getLoginId());
+			session.setAttribute("userName", user.getName());
+			
+			map.put("code", 200);
+			map.put("result", "성공");
+		} else { // 로그인에 실패했을 때
+			map.put("code", 403);
+			map.put("error_message", "존재하지 않는 사용자입니다.");
+		}
+		return map;
 	}
 }

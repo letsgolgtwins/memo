@@ -7,8 +7,12 @@
 				<h1 class="ml-4">MEMO 게시판</h1>
 			</div>
 			<!-- 로그인 영역 -->
-			<div>
-				<h4 class="mr-5"><a href="#">로그인</a></h4>
+			<div th:if="${session.userId != null}">
+				<span th:text="${session.userName} + '님 안녕하세요.'"></span>
+				<h4 class="mr-5"><a href="/user/sign-out">로그아웃</a></h4>
+			</div>
+			<div th:unless="${session.userId != null}">
+				<h4 class="mr-5"><a href="/user/sign-in-view">로그인</a></h4>
 			</div>
 		</div>
 	</header>
