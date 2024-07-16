@@ -10,4 +10,41 @@
  		FROM
  			`post`
  	</select>
+ 	
+ 	<!-- db에서 글 목록 select -->
+ 	<select id="selectPostListByUserId" parameterType="int" resultType="com.memo.Post.domain.Post">
+ 		SELECT
+ 			`id`
+			,`userId`
+			,`subject`
+			,`content`
+			,`imagePath`
+			,`createdAt`
+			,`updatedAt`
+ 		FROM
+ 			`post`
+ 		WHERE
+ 			`userId` = #{userId}
+ 		ORDER BY `id` DESC
+ 	</select>
+ 	
+ 	<!-- 글 쓰기 - db에 글 및 컨텐츠 insert -->
+ 	<insert id="insertPostListByUserId" parameterType="map">
+ 		INSERT INTO `post`
+ 		(
+			`subject`
+			,`content`
+			,`imagePath`
+			,`createdAt`
+			,`updatedAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{subject}
+ 			, #{content}
+ 			, #{imagePath}
+ 			, NOW()
+ 			, NOW()
+ 		)
+ 	</insert>
  </mapper>
