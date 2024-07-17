@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.memo.Post.domain.Post;
 
@@ -19,9 +20,10 @@ public interface PostMapper {
 	public List<Post> selectPostListByUserId(int userId);
 	
 	// 글 쓰기 - db에 컨텐츠 insert
-	public Post insertPostListByUserId(
+	public void insertPost(
+			@Param("userId") int userId,
 			@Param("subject") String subject, 
 			@Param("content") String content, 
-			@Param("imagePath") String imagePath
+			@Param("imagePath") String imagePath // 이때는 db에 가까워진 상태이므로 MultipartFile을 쓰지 못한다.
 			);
 }

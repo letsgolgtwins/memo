@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.memo.Post.BO.PostBO;
 import com.memo.Post.domain.Post;
+
+import jakarta.servlet.http.HttpSession;
 
 @RequestMapping("/post")
 @RestController
@@ -20,24 +23,29 @@ public class PostRestController {
 	private PostBO postBO;
 	
 	// 글 쓰기 후 저장
+	// /post/create
 	@PostMapping("/create")
 	public Map<String, Object> create(
 			@RequestParam("subject") String subject, 
 			@RequestParam("content") String content,
-			@RequestParam("imagePath") String imagePath) {
+			@RequestParam(value = "file", required = false) MultipartFile file, // file은 비필수 파라미터
+			HttpSession session) { // 글쓴이 번호를 꺼내기 위해 HttpSession session이 필요함.
 		
+		// 글쓴이 번호를 session에서 꺼낸다.
+		// 만약에 ""안에 들어갈 요소를 까먹었다면 다시 UserRestcontroller 를 가서 확인한다.
+		int userId = (int) session.getAttribute("userId"); 
+		
+		// 2교시-내용추가
+		String userLoginId = (String) session.getAttribute("userLoginId");
+	
 		// 글 쓰기 db에 insert
-		Post postContents = postBO.addPostListByUserId(subject, content, imagePath);
+		postBO.addPost(userId, userLoginId, subject, content, file);
 		
 		// 응답 JSON
 		Map<String, Object> result = new HashMap<>();
-		if (postContents != null) { // 즉, 글쓰기에 성공한 셈
-			result.put("code", 200);
-			result.put("message", "글쓰기성공");
-		} else { // 즉, 글쓰기에 실패한 셈
-			result.put("code", 500);
-			result.put("error_message", "실패");
-		}
+		result.put("code", 200);
+		result.put("message", "글쓰기성공");
+		
 		return result;
 		
 	}

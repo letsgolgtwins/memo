@@ -10,7 +10,7 @@
 		<input type="text" id="subject" class="form-control" placeholder="제목을 입력하세요.">
 		<textarea id="content" rows="10" class="form-control" placeholder="내용을 입력하세요."></textarea>
 		<div class="d-flex justify-content-end my-3">
-			<input type="file" id="file">
+			<input type="file" id="file" accept=".jpg, .png, .gif"> <!-- accept="얘네들만 허용하겠다." -->
 		</div>
 		
 		<div class="d-flex justify-content-between">
@@ -29,8 +29,86 @@
 			// postListBtn 목록 버튼 클릭 이벤트
 			$("#postListBtn").on('click', function() {
 				// 글 목록 페이지로 이동
-				location.href = "/post/post-list-view" // 이거 왜 로그인 창으로 가냐..??
+				location.href = "/post/post-list-view" 
 			}); // postListBtn 클릭 이벤트 끝.
+			
+			// clearBtn 모두 지우기 버튼 클릭 이벤트
+			$("#clearBtn").on('click', function() {
+				// alert("중간점검");
+				$("#subject").val(""); // "" 는 내용 초기화 = 모두 지우기인셈
+				$("#content").val(""); // "" 는 내용 초기화 = 모두 지우기인셈
+			}); // clearBtn 모두 지우기 버튼 클릭 이벤트 끝.
+			
+			// saveBtn 글쓰기 버튼 클릭 이벤트
+			$("#saveBtn").on('click', function() {
+				// alert("중간점검");
+				
+				// 필수(not null) 항목 validation
+				// 근데 왜 userId는 안해주냐? => session에 담겨 있으므로 (라고 하심..)
+				let subject = $("#subject").val().trim();
+				let content = $("#content").val().trim();
+				let fileName = $("#file").val(); // C:\fakepath\baseball-1425124_1280.jpg
+				
+				// 유효성 검사 (왜? 필수니까)
+				if (!subject) {
+					alert("제목을 입력하세요.");
+					return
+				}
+				if (!content) {
+					alert("내용을 입력하세요.");
+					return
+				}
+				
+				// 업로드된게 있을 때 즉, fileName(파일명)이 비워져있지 않을 때 => 확장자 체크
+				if (fileName) { // fileName(파일명)이 있을 때
+					// alert("파일명이 존재한다.");
+					// C:\fakepath\baseball-1425124_1280.jpg
+					let extension = fileName.split(".").pop().toLowerCase() // 배열칸중에 제일 마지막을 가져오겠다. toLowerCase(): 소문자로 바꾸겠다.
+					console.log(extension);
+					
+					if ($.inArray(extension, ["jpg", "gif", "png"]) == -1) { // -1과 같다면 파알명 세개 중 포함되어있지 않다.
+						alert("이미지 파일만 업로드 할 수 있습니다.");
+						$("#file").val(""); // 파일을 비운다.	
+						return;
+					}
+				} 
+
+				console.log(subject);
+				console.log(content);
+				
+				// form 태그를 JavaScript에서 만든다.
+				// 이미지 업로드 시 반드시 필요
+				let formData = new FormData(); // 여기까지는 이제 form 태그 열고 닫은 거 까지 한 거라고 보면 됨.
+				formData.append("subject", subject); // append 는 아래쪽 자식을 추가하는 것. key는 name과 같고 request parameter명
+				formData.append("content", content); 
+				// 사진 및 파일 업로드
+				formData.append("file", $("#file")[0].files[0]); // 0번쨰 파일이다. 걍 문법임. (파일은 여러개가 아닌 하나만 올리는 상황)
+				
+				// 자, 이제 ajax를 이용해서 보내보자
+				// 1) {"":} 로 보내는 방식 2) serialize로 보내는 방식 3) 지금 배우는 방식
+				$.ajax({
+					// request
+					type: "post"
+					, url: "/post/create"
+					, data:formData
+					, enctype:"multipart/form-data" // 파일 업로드시 필수 설정
+					, processData:false // 파일 업로드 필수 설정
+					, contentType:false // 파일 업로드 필수 설정
+					
+					// response
+					, success:function(data) {
+						if (data.code == 200) { // 저장 성공
+							alert("메모가 저장되었습니다. 메모글 화면으로 이동합니다.");
+							location.href = "/post/post-list-view"
+						} else { // 저장 실패
+							alert(data.error_message);
+						}
+					} 
+					, error:function(e) { // 아예 서버상의 에러.
+						alert("글을 저장하는데 실패했습니다.");
+					}
+				}); // AJAX 끝.
+			}); // saveBtn 저장 버튼 클릭 이벤트 끝
 		}); // ready 함수 끝.
     </script>
 </th:block>

@@ -29,10 +29,11 @@
  	</select>
  	
  	<!-- 글 쓰기 - db에 글 및 컨텐츠 insert -->
- 	<insert id="insertPostListByUserId" parameterType="map">
+ 	<insert id="insertPost" parameterType="map">
  		INSERT INTO `post`
  		(
-			`subject`
+ 			`userId`
+			,`subject`
 			,`content`
 			,`imagePath`
 			,`createdAt`
@@ -40,7 +41,8 @@
  		)
  		VALUES
  		(
- 			#{subject}
+ 			#{userId}
+ 			, #{subject}
  			, #{content}
  			, #{imagePath}
  			, NOW()
