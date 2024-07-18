@@ -25,7 +25,7 @@
  			`post`
  		WHERE
  			`userId` = #{userId}
- 		ORDER BY `id` DESC
+ 		ORDER BY `id` 
  	</select>
  	
  	<!-- 글 쓰기 - db에 글 및 컨텐츠 insert -->
@@ -49,4 +49,22 @@
  			, NOW()
  		)
  	</insert>
+ 	
+ 	<!-- 글 상세 조회 - db에서 단건 select -->
+ 	<select id="selectPostByPostIdUserId" parameterType="map" resultType="com.memo.Post.domain.Post">
+ 		SELECT 
+ 			`id`
+			,`userId`
+			,`subject`
+			,`content`
+			,`imagePath`
+			,`createdAt`
+			,`updatedAt`
+ 		FROM
+ 			`post`
+ 		WHERE
+ 			`userId` = #{userId}
+ 		AND
+ 			`Id` = #{postId}
+ 	</select>
  </mapper>

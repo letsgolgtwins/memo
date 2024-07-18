@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.memo.Post.BO.PostBO;
 import com.memo.Post.domain.Post;
@@ -49,6 +50,23 @@ public class PostController {
 	@GetMapping("/post-create-view")
 	public String postCreateView() {
 		return "post/postCreate";
+	}
+	
+	// 글 상세 화면
+	// http://localhost/post/post-detail-view
+	@GetMapping("/post-detail-view")
+	public String postDetailView(@RequestParam("postId") int postId, Model model, HttpSession session) {
+		// userId까지 꺼내오겟다
+		int userId = (int) session.getAttribute("userId");
+		
+		// db에서 단건 조회
+		Post post = postBO.getPostByPostIdUserId(postId, userId);
+		
+		// model에 담기
+		model.addAttribute("postInfo", post);
+		
+		// 화면 이동
+		return "post/postDetail";
 	}
 	
 }

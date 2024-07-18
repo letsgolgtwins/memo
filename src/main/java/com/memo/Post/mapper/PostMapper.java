@@ -26,4 +26,10 @@ public interface PostMapper {
 			@Param("content") String content, 
 			@Param("imagePath") String imagePath // 이때는 db에 가까워진 상태이므로 MultipartFile을 쓰지 못한다.
 			);
+	
+	// 글 상세 조회 - db에서 단건 select
+	public Post selectPostByPostIdUserId(
+			@Param("postId") int postId, 
+			@Param("userId") int userId
+			);
 }

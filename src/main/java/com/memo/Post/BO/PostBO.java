@@ -35,6 +35,11 @@ public class PostBO {
 		}
 		
 		// 일단 db에 insert되지 않게 주석 처리
-		postMapper.insertPost(userId, subject, content, imagePath); // imagePath자리엔 임의로 null로 넣는다
+		postMapper.insertPost(userId, subject, content, imagePath); 
+	}
+	
+	// db에서 글 상세 조회 - 단건 select
+	public Post getPostByPostIdUserId(int postId, int userId) {
+		return postMapper.selectPostByPostIdUserId(postId, userId);
 	}
 }

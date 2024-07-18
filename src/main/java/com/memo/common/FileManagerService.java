@@ -15,7 +15,7 @@ public class FileManagerService {
 	// 실제 업로드가 된 이미지가 저장될 서버의 경로
 	public static final String FILE_UPLOAD_PATH = "C:\\이민희\\6_spring_project\\memo\\memo_workspace\\images/"; // 상수로 필드를 지음. 이 경우 대문자로 만들어준다. 그리고 경로 마지막에 / 를 넣어준다.
 
-	// input: MultipartFile, userLoginId(근데 이건 걍 해준 것일뿐, userId로 해줘도 된다. 단지 1_17324215 이런거 보단 aaaa_173245가 더 낫게 보이니까~)
+	// input: MultipartFile file, String userLoginId(근데 이건 걍 해준 것일뿐, userId로 해줘도 된다. 단지 1_17324215 이런거 보단 aaaa_173245가 더 낫게 보이니까~)
 	// output: String(이미지 경로)
 	public String uploadFile(MultipartFile file, String userLoginId) {
 		// 폴더(디렉토리) 생성

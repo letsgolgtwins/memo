@@ -63,10 +63,10 @@
 				if (fileName) { // fileName(파일명)이 있을 때
 					// alert("파일명이 존재한다.");
 					// C:\fakepath\baseball-1425124_1280.jpg
-					let extension = fileName.split(".").pop().toLowerCase() // 배열칸중에 제일 마지막을 가져오겠다. toLowerCase(): 소문자로 바꾸겠다.
-					console.log(extension);
+					let extension = fileName.split(".").pop().toLowerCase() // 배열칸중에 제일 마지막을 가져오겠다. toLowerCase(): 소문자로 바꾸겠다. JPG, PNG 이렇게 대문자로 된 것들도 있으니
+ 					console.log(extension);
 					
-					if ($.inArray(extension, ["jpg", "gif", "png"]) == -1) { // -1과 같다면 파알명 세개 중 포함되어있지 않다.
+					if ( $.inArray( extension, ["jpg", "gif", "png"] ) == -1 ) { // -1과 같다면 파알명 세개 중 포함되어있지 않다.
 						alert("이미지 파일만 업로드 할 수 있습니다.");
 						$("#file").val(""); // 파일을 비운다.	
 						return;

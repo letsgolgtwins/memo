@@ -20,7 +20,12 @@
 			<tbody>
 				<tr th:each="post, status : ${result}">
 					<td th:text="${post.id}">1</td>
-					<td th:text="${post.subject}">제목</td>
+					<td><a th:href="'/post/post-detail-view?postId=' + ${post.id}" th:text="${post.subject}">제목</a></td>
+
+					<!-- 방법1 <td><a th:href="|/post/post-detail-view?postId=${post.id}|" th:text="${post.subject}">제목</a></td> -->
+					<!-- 방법2 <td><a th:href="'/post/post-detail-view?postId=' + ${post.id}" th:text="${post.subject}">제목</a></td> -->
+					<!-- 방법3 <td><a th:href="@{/post/post-detail-view(postId=${post.id})}" th:text="${post.subject}">제목</a></td> -->
+
 					<td th:text="${#temporals.format(post.createdAt, 'yyyy년 M월 d일 HH:mm:ss')}">2024-07-16</td>
 					<td th:text="${#temporals.format(post.updatedAt, 'yyyy년 M월 d일 HH:mm:ss')}">2024-07-16</td>
 				</tr>
