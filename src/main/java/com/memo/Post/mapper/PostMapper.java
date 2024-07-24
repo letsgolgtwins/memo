@@ -32,4 +32,12 @@ public interface PostMapper {
 			@Param("postId") int postId, 
 			@Param("userId") int userId
 			);
+	
+	// 글 수정 - db에서 update
+	public void updatePostByPostId(
+			@Param("postId") int postId,
+			@Param("subject") String subject, 
+			@Param("content") String content, 
+			@Param("imagePath") String imagePath
+			);
 }

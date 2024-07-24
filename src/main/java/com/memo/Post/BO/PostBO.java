@@ -10,9 +10,14 @@ import com.memo.Post.domain.Post;
 import com.memo.Post.mapper.PostMapper;
 import com.memo.common.FileManagerService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j //방법3
 @Service
 public class PostBO {
-
+	//방법1 private Logger log = LoggerFactory.getLogger(PostBO.class); 
+	//방법2 private Logger log = LoggerFactory.getLogger(this.getClass()); 
+	
 	@Autowired
 	private PostMapper postMapper;
 	
@@ -41,5 +46,35 @@ public class PostBO {
 	// db에서 글 상세 조회 - 단건 select
 	public Post getPostByPostIdUserId(int postId, int userId) {
 		return postMapper.selectPostByPostIdUserId(postId, userId);
+	}
+	
+	// 글 수정  - db에서 update
+	// i: 파라미터들 / o: void(굳이 안받겠다)
+	public void updatePostByPostId(int userId, String userLoginId, int postId, String content, String subject, MultipartFile file) {
+		// update를 할 기존글을 가져온다. (1. 이미지 교체시 기존의 이미지를 삭제하기 위해서 2. 업데이트 대상이 있는지 확인 )
+		Post post = postMapper.selectPostByPostIdUserId(postId, userId);
+		if (post == null) {
+			log.warn("[글 수정부분] post is null. userId:{}, postId:{}", userId, postId);
+			return;
+		}
+		
+		// 파일이 있으면
+		// 1. 새 이미지를 업로드 
+		// 2. 1.단계가 성공하면 기존이미지가 있을 때, 삭제하겠다.
+		String imagePath = null;
+		
+		if (file != null) {
+
+			// 새 이미지 업로드
+			imagePath = fileManagerService.uploadFile(file, userLoginId);
+			
+			// 업로드 성공 시 (null 아님) 기존 이미지가 있으면 제거
+			if (imagePath != null && post.getImagePath() != null) {
+				// 폴더와 이미지 제거(서버에서)
+				fileManagerService.deleteFile(post.getImagePath());
+			}
+		}
+		
+		// db
 	}
 }

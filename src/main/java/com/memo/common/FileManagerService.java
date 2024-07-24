@@ -9,9 +9,12 @@ import java.nio.file.Paths;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component // 범용적인 것 
 public class FileManagerService {
-
+	
 	// 실제 업로드가 된 이미지가 저장될 서버의 경로
 	public static final String FILE_UPLOAD_PATH = "C:\\이민희\\6_spring_project\\memo\\memo_workspace\\images/"; // 상수로 필드를 지음. 이 경우 대문자로 만들어준다. 그리고 경로 마지막에 / 를 넣어준다.
 
@@ -49,6 +52,39 @@ public class FileManagerService {
 		return "/images/" + directoryName + "/" + file.getOriginalFilename();
 		
 		// /images/aaaa_1721209539893/coors-field-4046946_1280.jpg
-		// 
+		
+	}
+	
+	// 파일 삭제
+	// i: 이미지 경로(path) / o: X
+	public void deleteFile(String imagePath) { // /images/aaaa_1721209539893/coors-field-4046946_1280.jpg
+		// C:\이민희\6_spring_project\memo\memo_workspace\images\aaaa_1721209539893
+		
+		// 주소에 겹치는 /images/ 를 지워야됨
+		Path path = Paths.get(FILE_UPLOAD_PATH + imagePath.replace("/images/", ""));
+		
+		// 삭제할 이미지가 존재하는 가?
+		if (Files.exists(path)) {
+			// 이미지 삭제
+			try {
+				Files.delete(path);
+			} catch (IOException e) {
+				// e.printStackTrace();
+				log.info("[FileManagerService 파일삭제] 삭제 실패. path:{}", path.toString());
+				return;
+			}
+			
+			// 폴더(디렉토리) 삭제
+			path = path.getParent(); // 부모 노드를 다시 페스에 저장
+			if (Files.exists(path)) {
+				try {
+					Files.delete(path);
+				} catch (IOException e) {
+					// e.printStackTrace();
+					log.info("[FileManagerService 파일삭제] 디렉토리 삭제 실패. path:{}", path.toString());
+					return;
+				}
+			}
+		}
 	}
 }

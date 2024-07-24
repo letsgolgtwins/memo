@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,14 @@ public class PostRestController {
 
 	@Autowired
 	private PostBO postBO;
-	
+	/**
+	 * 글쓰기 API
+	 * @param subject
+	 * @param content
+	 * @param file
+	 * @param session
+	 * @return
+	 */
 	// 글 쓰기 후 저장
 	// /post/create
 	@PostMapping("/create")
@@ -46,6 +54,30 @@ public class PostRestController {
 		result.put("code", 200);
 		result.put("message", "글쓰기성공");
 		
+		return result;
+	}
+	
+	// 글 수정 
+	// /post/update
+	@PutMapping("/update")
+	public Map<String, Object> update(
+			@RequestParam("postId") int postId,
+			@RequestParam("subject") String subject,
+			@RequestParam("content") String content,
+			@RequestParam(value = "file", required = false) MultipartFile file, // file은 비필수 파라미터
+			HttpSession session ) { 
+		
+		// session에서 userLoginId 만 뽑아내겠다.
+		int userId = (int) session.getAttribute("userId");
+		String userLoginId = (String) session.getAttribute("userLoginId");
+		
+		// 글 수정 - db에서 update +이미지도 마찬가지
+		postBO.updatePostByPostId(userId, userLoginId, postId, content, subject, file);
+		
+		// 응답 JSON
+		Map<String, Object> result = new HashMap<>();
+		result.put("code", 200);
+		result.put("result", "성공");
 		return result;
 		
 	}

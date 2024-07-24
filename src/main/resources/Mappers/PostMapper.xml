@@ -67,4 +67,19 @@
  		AND
  			`Id` = #{postId}
  	</select>
+ 	
+ 	<!-- 글 수정 - db에서 update -->
+	<update id="updatePostByPostId" parameterType="map">
+		UPDATE `post`
+		SET
+			`subject` = #{subject}
+			, `content` = #{content}
+			<!-- imagePath가 null이 아닐 때만 나타나라. -->
+			<if test="imagePath != null"> 
+			, imagePath = #{imagePath}
+			</if>
+			, `updatedAt` = NOW()
+		WHERE
+			`id` = #{postId}
+	</update>
  </mapper>
