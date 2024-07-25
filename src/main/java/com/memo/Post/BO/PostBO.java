@@ -75,6 +75,27 @@ public class PostBO {
 			}
 		}
 		
-		// db
+		// db에서 update  
+		postMapper.updatePostByPostId(postId, subject, content, imagePath);
+	}
+	
+	// 글 삭제 
+	// i: postId, userId / o: void
+	public void deletePostByPostIdAndUserId(int postId, int userId) {
+		// 기존 글 가져오기 (이미지가 존재할 시 기존글 삭제를 위해)
+		Post post = postMapper.selectPostByPostIdUserId(userId, postId);
+		
+		if (post == null) {
+			log.info("[글 삭제] post is null. postId:{}, userId:{}" , postId, userId);
+			return; // 더이상 db에서 삭제할 필요가 없기에 return 을 해준다.
+		}
+		
+		// post를 db에서 delete
+		int rowCount = postMapper.deletePostByPostId(postId);
+		
+		// 이미지가 존재하면 삭제, 삭제된 행도 1일 때
+		if (rowCount == 1 && post.getImagePath() != null) {
+			fileManagerService.deleteFile(post.getImagePath());
+		}
 	}
 }

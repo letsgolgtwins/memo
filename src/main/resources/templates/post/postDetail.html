@@ -21,7 +21,7 @@
 		</div>
 		
 		<div class="d-flex justify-content-between">
-			<button type="button" class="btn btn-secondary" id="deleteBtn">삭제</button>
+			<button type="button" class="btn btn-secondary" th:data-post-id="${postInfo.id}"  id="deleteBtn">삭제</button>
 			<div>
 				<a href="/post/post-list-view" class="btn btn-dark">목록</a>
 				<button type="button" th:data-post-id="${postInfo.id}" class="btn btn-warning" id="saveBtn">수정</button>
@@ -108,6 +108,29 @@
 				}); // AJAX 끝.
 			});
 			
+			// deleteBtn 글삭제 버튼 클릭 이벤트 
+			$("#deleteBtn").on('click', function() {
+				let postId = $(this).data("post-id"); // 글 번호로 삭제
+				// alert(postId);
+				$.ajax({
+					// request
+					type: "delete"
+					, url: "/post/delete"
+					, data: {"postId":postId}
+					// response
+					, success:function(data) {
+						if (data.code == 200) { // 삭제 성공
+							// 글 목록 화면으로 이동
+							location.href = "/post/post-list-view";
+						} else {
+							alert(data.error_message);
+						}
+					}
+					, error:function(e) {
+						alert("글을 삭제하는데 실패했습니다.");
+					}
+				}); // AJAX 끝
+			}); // deleteBtn 글삭제 버튼 클릭 이벤트 끝.
 		}); // ready 함수 끝
     </script>
 </th:block>

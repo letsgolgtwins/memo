@@ -40,4 +40,7 @@ public interface PostMapper {
 			@Param("content") String content, 
 			@Param("imagePath") String imagePath
 			);
+	
+	// 글 삭제 - db에서 delete
+	public int deletePostByPostId(int postId);
 }
