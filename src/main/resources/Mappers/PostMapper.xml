@@ -12,7 +12,7 @@
  	</select>
  	
  	<!-- db에서 글 목록 select -->
- 	<select id="selectPostListByUserId" parameterType="int" resultType="com.memo.Post.domain.Post">
+ 	<select id="selectPostListByUserId" parameterType="map" resultType="com.memo.Post.domain.Post">
  		SELECT
  			`id`
 			,`userId`
@@ -25,7 +25,33 @@
  			`post`
  		WHERE
  			`userId` = #{userId}
- 		ORDER BY `id` 
+ 			<if test="direction == 'next'">
+ 			<![CDATA[
+ 			AND `id` < #{standardId}
+ 			]]>
+ 			ORDER BY `id` DESC
+ 			</if>
+ 			<if test="direction == 'prev'">
+ 			<![CDATA[
+ 			AND `id` > #{standardId}
+ 			]]>
+ 			</if>
+ 			<if test="direction == null">
+ 			ORDER BY `id` DESC 
+ 			</if>
+ 		LIMIT ${limit}
+ 	</select>
+ 	
+ 	<!--  -->
+ 	<select id="selectPostIdByUserIdAsSort" parameterType="map" resultType="int">
+ 		SELECT 
+ 			`id`
+ 		FROM 
+ 			`post`
+ 		WHERE
+ 			`userId` = #{userId}
+		ORDER BY `id` ${sort}
+		LIMIT 1
  	</select>
  	
  	<!-- 글 쓰기 - db에 글 및 컨텐츠 insert -->

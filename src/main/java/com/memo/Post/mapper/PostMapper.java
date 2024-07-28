@@ -43,4 +43,18 @@ public interface PostMapper {
 	
 	// 글 삭제 - db에서 delete
 	public int deletePostByPostId(int postId);
+	
+	// 페이징
+	public List<Post> selectPostListByUserId(
+			@Param("userId") int userId,
+			@Param("standardId") Integer standardId,
+			@Param("direction") String direction,
+			@Param("limit") int limit
+			);
+	
+	// 여기서의 return 타입은 postId(int)
+	public int selectPostIdByUserIdAsSort(
+			@Param("userId") int userId,
+			@Param("sort") String sort
+			);
 }
